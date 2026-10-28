@@ -1,0 +1,8 @@
+{
+  "Id": "SCUBA.GWS",
+  "Name": "CISA ScubaGoggles",
+  "Source": "Custom",
+  "Tags": ["ScubaGoggles"],
+  "RequiresMaester": "3.0",
+  "NoResultReason": "ScubaGoggles did not report a result for this policy."
+}

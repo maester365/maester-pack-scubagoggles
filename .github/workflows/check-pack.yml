@@ -1,0 +1,94 @@
+# Checks the pack on every push and pull request: the manifest and the content checks that Install-MtPack runs
+# (Test-MtPack), then the pack on the ScubaResults fixture in tools/fixtures, where each ScubaGoggles result must
+# map to the Maester result it should, and the catalog, where every policy must have its text.
+name: Check pack
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  # bump-version.yml calls it on the commit that raises the version, which no push event checks.
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to check.
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Install Maester
+        shell: pwsh
+        run: Install-PSResource -Name Maester -Prerelease -TrustRepository -Quiet
+
+      - name: Check the pack
+        shell: pwsh
+        run: |
+          Import-Module Maester
+          if (-not (Get-Command Test-MtPack -ErrorAction SilentlyContinue)) {
+            Write-Output '::warning::This Maester version has no packs yet; the pack was not checked.'
+            return
+          }
+          $manifest = Get-Content ./maester-pack.json -Raw | ConvertFrom-Json
+          # The maester and maester365 publishers are reserved for packs of the maester365 organisation.
+          $official = $manifest.Publisher -in 'maester', 'maester365'
+          $check = Test-MtPack . -Official:$official
+          $check | Format-List Id, Version, IsValid, Risk, Errors, Warnings, Findings
+          if (-not $check.IsValid) { throw 'The pack is not valid.' }
+          if ($check.Risk -eq 'High') { throw 'The content checks rate the pack High risk.' }
+
+      - name: Run the tests on the fixture
+        shell: pwsh
+        run: |
+          # tools/fixtures holds a cut of ScubaGoggles' sample report: rows of each result it writes, and the
+          # results the sample lacks (Omitted, Incorrect result, Error and a policy reported twice).
+          Import-Module Maester
+          if (-not (Get-Command Test-MtPack -ErrorAction SilentlyContinue)) { return }
+          $config = [pscustomobject]@{
+            GlobalSettings = [pscustomobject]@{ 'ScubaGoggles.ReportPath' = './tools/fixtures'; 'ScubaGoggles.MaxReportAgeDays' = 0 }
+          }
+          $results = @(Invoke-MtTest -Path . -Config $config)
+          $results | Format-Table Id, Result, Severity, ReasonCode -AutoSize | Out-String -Width 200
+          $broken = @($results | Where-Object ReasonCode -In 'InvalidMetadata', 'InvalidReturn', 'InvalidConfiguration', 'InvalidInstanceId', 'InstanceSourceFailed')
+          if ($broken) { throw "The engine could not run $($broken.Count) test(s): $($broken.Id -join ', ')" }
+
+          $expected = [ordered]@{
+            'MP.SCUBA.GWS.ASSUREDCONTROLS.1.1' = 'Passed'      # Pass
+            'MP.SCUBA.GWS.CALENDAR.1.1'        = 'Failed'      # Fail, a SHALL policy
+            'MP.SCUBA.GWS.ASSUREDCONTROLS.2.1' = 'Failed'      # Warning, a SHOULD policy
+            'MP.SCUBA.GWS.COMMONCONTROLS.2.1'  = 'Investigate' # No events found
+            'MP.SCUBA.GWS.CALENDAR.3.2'        = 'Skipped'     # N/A
+            'MP.SCUBA.GWS.GMAIL.4.1'           = 'Skipped'     # Omitted
+            'MP.SCUBA.GWS.GMAIL.4.2'           = 'Skipped'     # Incorrect result
+            'MP.SCUBA.GWS.GMAIL.4.3'           = 'Error'       # Error
+            'MP.SCUBA.GWS.GMAIL.4.4'           = 'Error'       # Error - Test results missing
+            'MP.SCUBA.GWS.GMAIL.4.4-2'         = 'Passed'      # the same policy reported again
+          }
+          $wrong = foreach ($id in $expected.Keys) {
+            $row = $results | Where-Object Id -eq $id
+            if ([string]$row.Result -ne $expected[$id]) { "$id is '$($row.Result)', not '$($expected[$id])'" }
+          }
+          if ($results.Count -ne 13) { $wrong += "There are $($results.Count) rows, not 13." }
+          $fail = $results | Where-Object Id -eq 'MP.SCUBA.GWS.CALENDAR.1.1'
+          if ($fail.Severity -ne 'High') { $wrong += "MP.SCUBA.GWS.CALENDAR.1.1 has severity '$($fail.Severity)', not 'High'." }
+          if ($fail.ResultDetail.TestDescription -notlike '*#### Remediation*') { $wrong += 'MP.SCUBA.GWS.CALENDAR.1.1 has no remediation from the catalog.' }
+          if (@($results.ResultDetail.TestResult) -match '<[a-z]') { $wrong += 'A result still holds HTML from ScubaGoggles.' }
+          if ($wrong) { throw ($wrong -join "`n") }
+
+      - name: Check the catalog
+        shell: pwsh
+        run: |
+          $catalog = Get-Content ./catalog.json -Raw | ConvertFrom-Json
+          $bad = @($catalog.Tests | Where-Object { $_.Id -notmatch '^MP\.SCUBA\.GWS\.[A-Z]+\.\d+\.\d+$' -or -not $_.Title -or -not $_.Rationale -or -not $_.Remediation -or $_.Criticality -notin 'SHALL', 'SHOULD', 'MAY' })
+          if ($bad) { throw "These catalog entries are incomplete: $($bad.ControlId -join ', '). Run tools/Update-ScubaGwsCatalog.ps1 again and check the baselines." }
+          if (@($catalog.Tests.Id | Sort-Object -Unique).Count -ne $catalog.Tests.Count) { throw 'The catalog repeats an ID.' }

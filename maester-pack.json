@@ -1,0 +1,35 @@
+{
+  "$schema": "https://maester.dev/schemas/maester-pack-1.0.json",
+  "Id": "maester365.scubagoggles",
+  "Guid": "911bbb74-149a-438c-a62a-c649970fbe37",
+  "Name": "CISA ScubaGoggles for Google Workspace",
+  "Description": "Shows each result of CISA's ScubaGoggles assessment of Google Workspace in the Maester report.",
+  "Version": "0.1.0",
+  "Publisher": "maester365",
+  "License": "MIT",
+  "Guide": "maester-pack.guide.json",
+  "Homepage": "https://github.com/maester365/maester-pack-scubagoggles",
+  "Support": "https://github.com/maester365/maester-pack-scubagoggles/issues",
+  "SecurityContact": "https://github.com/maester365/maester-pack-scubagoggles/security/advisories/new",
+  "RequiresMaester": ">=3.0",
+  "Code": "SCUBA.GWS",
+  "Suites": [
+    "tests"
+  ],
+  "Helpers": [
+    "helpers"
+  ],
+  "Catalog": "catalog.json",
+  "Uses": {
+    "Services": [],
+    "GraphScopes": [],
+    "TenantWrites": [],
+    "Network": [],
+    "Modules": []
+  },
+  "Categories": [
+    "Google Workspace",
+    "CISA",
+    "SCuBA"
+  ]
+}

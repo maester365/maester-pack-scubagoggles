@@ -1,0 +1,257 @@
+{
+  "MetaData": {
+    "TenantId": "ABCDEFG",
+    "DisplayName": "Cool Example Org",
+    "DomainName": "example.org",
+    "ProductSuite": "Google Workspace",
+    "ProductsAssessed": [
+      "Assured Controls",
+      "Google Calendar",
+      "Google Chat",
+      "Google Classroom",
+      "Common Controls",
+      "Google Drive and Docs",
+      "Gemini",
+      "Gmail",
+      "Groups for Business",
+      "Google Meet",
+      "Google Sites"
+    ],
+    "ProductAbbreviationMapping": {
+      "Gmail": "gmail",
+      "Google Calendar": "calendar",
+      "Groups for Business": "groups",
+      "Google Chat": "chat",
+      "Google Drive and Docs": "drive",
+      "Google Meet": "meet",
+      "Google Sites": "sites",
+      "Common Controls": "commoncontrols",
+      "Assured Controls": "assuredcontrols",
+      "Google Classroom": "classroom",
+      "Gemini": "gemini"
+    },
+    "Tool": "ScubaGoggles",
+    "ToolVersion": "1.1.0",
+    "TimestampZulu": "2026-10-15T22:53:04.669Z",
+    "ReportUUID": "06cfbd7d-d329-4f1a-9e46-88191c5a8c78",
+    "OrgName": "ScubaTest",
+    "OrgUnitName": null
+  },
+  "Summary": {},
+  "Results": {
+    "assuredcontrols": [
+      {
+        "GroupName": "Google Support Staff Data Access",
+        "GroupNumber": "1",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/assuredcontrols.md#1-google-support-staff-data-access",
+        "Controls": [
+          {
+            "Control ID": "GWS.ASSUREDCONTROLS.1.1v1",
+            "Requirement": "Access Approvals SHOULD be enabled.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span></div>",
+            "Result": "Pass",
+            "Criticality": "Should",
+            "Details": "Requirement met.",
+            "OriginalResult": "Pass",
+            "OriginalDetails": "Requirement met.",
+            "Comments": [],
+            "ResolutionDate": null
+          },
+          {
+            "Control ID": "GWS.ASSUREDCONTROLS.1.2v1",
+            "Requirement": "Agencies SHOULD restrict support access to U.S.-based Google staff only.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span></div>",
+            "Result": "Pass",
+            "Criticality": "Should",
+            "Details": "Requirement met.",
+            "OriginalResult": "Pass",
+            "OriginalDetails": "Requirement met.",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      },
+      {
+        "GroupName": "Data Regions Advanced Settings",
+        "GroupNumber": "2",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/assuredcontrols.md#2-data-regions-advanced-settings",
+        "Controls": [
+          {
+            "Control ID": "GWS.ASSUREDCONTROLS.2.1v1",
+            "Requirement": "Data processing across multiple regions SHOULD be disabled for all Google Workspace products.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #F6E8E5; color: black;\" title=\"Requires log-based verification\">Log-Based Check</span></div>",
+            "Result": "Warning",
+            "Criticality": "Should",
+            "Details": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org</dt><dd>Features that may process data across multiple regions are enabled for Chat, Gemini</dd></dl> \n\n<br><br>",
+            "OriginalResult": "Warning",
+            "OriginalDetails": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org</dt><dd>Features that may process data across multiple regions are enabled for Chat, Gemini</dd></dl> \n\n<br><br>",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      }
+    ],
+    "calendar": [
+      {
+        "GroupName": "External Sharing Options",
+        "GroupNumber": "1",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/calendar.md#1-external-sharing-options",
+        "Controls": [
+          {
+            "Control ID": "GWS.CALENDAR.1.1v1",
+            "Requirement": "External sharing options for primary calendars SHALL be configured to &quot;Only free/busy information (hide event details).&quot;<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #C41230; color: white;\" title=\"Required by CISA BOD 25-01\">BOD 25-01 Requirement</span>\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span></div>",
+            "Result": "Fail",
+            "Criticality": "Shall",
+            "Details": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org (group deborahcunningham@example.com)</dt><dd>External sharing options for primary calendars is set to: Share all information, and allow managing of calendars</dd></dl> \n\n- <dl><dt>Johnny Schultz's OU</dt><dd>External sharing options for primary calendars is set to: Share all information, but outsiders cannot change calendars</dd></dl>",
+            "OriginalResult": "Fail",
+            "OriginalDetails": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org (group deborahcunningham@example.com)</dt><dd>External sharing options for primary calendars is set to: Share all information, and allow managing of calendars</dd></dl> \n\n- <dl><dt>Johnny Schultz's OU</dt><dd>External sharing options for primary calendars is set to: Share all information, but outsiders cannot change calendars</dd></dl>",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      },
+      {
+        "GroupName": "External Invitations Warnings",
+        "GroupNumber": "2",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/calendar.md#2-external-invitations-warnings",
+        "Controls": [
+          {
+            "Control ID": "GWS.CALENDAR.2.1v1",
+            "Requirement": "External invitations warnings SHALL be enabled to prompt users before sending invitations.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #C41230; color: white;\" title=\"Required by CISA BOD 25-01\">BOD 25-01 Requirement</span>\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span></div>",
+            "Result": "Fail",
+            "Criticality": "Shall",
+            "Details": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org (group deborahcunningham@example.com)</dt><dd>External Sharing Guest Prompt is disabled</dd></dl>",
+            "OriginalResult": "Fail",
+            "OriginalDetails": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org (group deborahcunningham@example.com)</dt><dd>External Sharing Guest Prompt is disabled</dd></dl>",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      },
+      {
+        "GroupName": "Calendar Interop Management",
+        "GroupNumber": "3",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/calendar.md#3-calendar-interop-management",
+        "Controls": [
+          {
+            "Control ID": "GWS.CALENDAR.3.2v1",
+            "Requirement": "Microsoft 365 (Graph API) SHALL be used instead of basic authentication to establish connectivity between tenants or organizations in cases where Calendar Interop is deemed necessary for agency mission fulfillment.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #046B9A; color: white;\" title=\"Requires manual verification\">Manual</span></div>",
+            "Result": "N/A",
+            "Criticality": "Shall/Not-Implemented",
+            "Details": "Currently not able to be tested automatically; please manually check.",
+            "OriginalResult": "N/A",
+            "OriginalDetails": "Currently not able to be tested automatically; please manually check.",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      },
+      {
+        "GroupName": "Paid Appointments",
+        "GroupNumber": "4",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/calendar.md#4-paid-appointments",
+        "Controls": [
+          {
+            "Control ID": "GWS.CALENDAR.4.1v1",
+            "Requirement": "&quot;Appointment Schedule with Payments&quot; SHOULD be disabled.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span></div>",
+            "Result": "Warning",
+            "Criticality": "Should",
+            "Details": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org</dt><dd>Paid calendar appointments are enabled</dd></dl>",
+            "OriginalResult": "Warning",
+            "OriginalDetails": "The following OUs are non-compliant:\n \n\n- <dl><dt>Cool Example Org</dt><dd>Paid calendar appointments are enabled</dd></dl>",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      }
+    ],
+    "commoncontrols": [
+      {
+        "GroupName": "Context-aware Access",
+        "GroupNumber": "2",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/commoncontrols.md#2-context-aware-access",
+        "Controls": [
+          {
+            "Control ID": "GWS.COMMONCONTROLS.2.1v1",
+            "Requirement": "Policies restricting access to Google Workspace (GWS) based on enterprise device signals SHOULD be implemented.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #F6E8E5; color: black;\" title=\"Requires log-based verification\">Log-Based Check</span></div>",
+            "Result": "No events found",
+            "Criticality": "Should",
+            "Details": "No relevant event in the current logs. While we are unable to determine the state from the logs, the default setting is non-compliant; manual check recommended.<br><br>",
+            "OriginalResult": "No events found",
+            "OriginalDetails": "No relevant event in the current logs. While we are unable to determine the state from the logs, the default setting is non-compliant; manual check recommended.<br><br>",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      }
+    ],
+    "gmail": [
+      {
+        "GroupName": "DomainKeys Identified Mail",
+        "GroupNumber": "2",
+        "GroupReferenceURL": "https://github.com/cisagov/scubagoggles/blob/v1.1.0/scubagoggles/baselines/gmail.md#2-domainkeys-identified-mail",
+        "Controls": [
+          {
+            "Control ID": "GWS.GMAIL.4.1v1",
+            "Requirement": "DKIM SHOULD be enabled for all domains.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #005288; color: white;\" title=\"Customizable via config file\">Configurable</span></div>",
+            "Result": "Omitted",
+            "Criticality": "Should",
+            "Details": "Test omitted by user. DMARC is handled by another team.",
+            "OriginalResult": "Omitted",
+            "OriginalDetails": "2 of 3 agency domain(s) found in violation: hines.com, example.org.",
+            "Comments": [],
+            "ResolutionDate": null
+          },
+          {
+            "Control ID": "GWS.GMAIL.4.2v1",
+            "Requirement": "DKIM SHOULD be enabled for all domains.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #005288; color: white;\" title=\"Customizable via config file\">Configurable</span></div>",
+            "Result": "Incorrect result",
+            "Criticality": "Should",
+            "Details": "Requirement met.",
+            "OriginalResult": "Fail",
+            "OriginalDetails": "2 of 3 agency domain(s) found in violation: hines.com, example.org.",
+            "Comments": [],
+            "ResolutionDate": null
+          },
+          {
+            "Control ID": "GWS.GMAIL.4.3v1",
+            "Requirement": "DKIM SHOULD be enabled for all domains.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #005288; color: white;\" title=\"Customizable via config file\">Configurable</span></div>",
+            "Result": "Error",
+            "Criticality": "Should",
+            "Details": "The API call <a href=\"https://example.org/api\">domains/list</a> failed.",
+            "OriginalResult": "Error",
+            "OriginalDetails": "2 of 3 agency domain(s) found in violation: hines.com, example.org.",
+            "Comments": [],
+            "ResolutionDate": null
+          },
+          {
+            "Control ID": "GWS.GMAIL.4.4v1",
+            "Requirement": "DKIM SHOULD be enabled for all domains.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #005288; color: white;\" title=\"Customizable via config file\">Configurable</span></div>",
+            "Result": "Error - Test results missing",
+            "Criticality": "Should",
+            "Details": "Report issue on GitHub",
+            "OriginalResult": "Error - Test results missing",
+            "OriginalDetails": "2 of 3 agency domain(s) found in violation: hines.com, example.org.",
+            "Comments": [],
+            "ResolutionDate": null
+          },
+          {
+            "Control ID": "GWS.GMAIL.4.4v1",
+            "Requirement": "DKIM SHOULD be enabled for all domains.<div class=\"badges\">\n<span class=\"indicator-badge\" style=\"background-color: #5E9732; color: black;\" title=\"Automatically verified by ScubaGoggles\">Automated Check</span>\n<span class=\"indicator-badge\" style=\"background-color: #005288; color: white;\" title=\"Customizable via config file\">Configurable</span></div>",
+            "Result": "Pass",
+            "Criticality": "Should",
+            "Details": "Requirement met.",
+            "OriginalResult": "Pass",
+            "OriginalDetails": "2 of 3 agency domain(s) found in violation: hines.com, example.org.",
+            "Comments": [],
+            "ResolutionDate": null
+          }
+        ]
+      }
+    ]
+  },
+  "Raw": {
+    "tenant_info": {
+      "ID": "ABCDEFG",
+      "domain": "example.org"
+    }
+  },
+  "AnnotatedFailedPolicies": {}
+}

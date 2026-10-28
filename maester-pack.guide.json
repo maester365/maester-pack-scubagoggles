@@ -1,0 +1,45 @@
+{
+  "$schema": "https://maester.dev/schemas/maester-pack-guide-1.0.json",
+  "Summary": "CISA's ScubaGoggles assessment of Google Workspace, with every policy result in the Maester report.",
+  "Prerequisites": [
+    { "Text": "Python 3.11 or later, then install ScubaGoggles once.", "Command": "pip install scubagoggles" },
+    { "Text": "Download OPA and choose the output folder and credentials file.", "Command": "scubagoggles setup" },
+    { "Text": "A Google OAuth client or a service account with domain-wide delegation, as the ScubaGoggles documentation describes. Signing in with OAuth needs a super admin." }
+  ],
+  "Connect": {
+    "Steps": [
+      { "Text": "Run ScubaGoggles against the Google Workspace tenant. It signs in to Google itself.", "Command": "scubagoggles gws -o ./scubagoggles" }
+    ],
+    "Notes": [
+      "Maester does not sign in to Google: it reads the ScubaResults file that scubagoggles gws writes."
+    ],
+    "More": "https://github.com/maester365/maester-pack-scubagoggles#run-it"
+  },
+  "Run": {
+    "Commands": [
+      { "Text": "Only the ScubaGoggles results", "Command": "Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn -SkipGraphConnect" },
+      { "Text": "Maester's tests and the ScubaGoggles results", "Command": "Invoke-Maester -Pack SCUBA.GWS" }
+    ],
+    "Notes": [
+      "Once installed, the pack runs with every Invoke-Maester. Without ScubaGoggles.ReportPath it is skipped, with the reason."
+    ],
+    "Options": [
+      { "Name": "ScubaGoggles.ReportPath", "Default": "empty", "Text": "The ScubaResults file, the folder scubagoggles gws wrote it in, or its output folder (the newest run is read)." },
+      { "Name": "ScubaGoggles.MaxReportAgeDays", "Default": "7", "Text": "Refuse a report older than this. 0 turns the check off." }
+    ],
+    "More": "https://github.com/maester365/maester-pack-scubagoggles#settings"
+  },
+  "AppOnly": {
+    "Supported": true,
+    "Methods": { "Certificate": false, "ClientSecret": false, "ManagedIdentity": false, "WorkloadIdentity": false },
+    "Text": "In a pipeline, run scubagoggles gws with a Google service account (--credentials) as its own step, then run Maester with ScubaGoggles.ReportPath set to its output folder."
+  },
+  "Links": [
+    { "Text": "About ScubaGoggles", "Url": "https://github.com/cisagov/ScubaGoggles" },
+    { "Text": "The Google Workspace baselines", "Url": "https://github.com/cisagov/ScubaGoggles/tree/main/scubagoggles/baselines" }
+  ],
+  "Support": {
+    "Tests": "https://github.com/cisagov/ScubaGoggles/issues",
+    "Pack": "https://github.com/maester365/maester-pack-scubagoggles/issues"
+  }
+}
