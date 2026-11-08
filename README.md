@@ -9,11 +9,12 @@ Assured Controls.
 Each policy is one row, `MP.SCUBA.GWS.<product>.<group>.<policy>`: `GWS.GMAIL.1.1v1` is `MP.SCUBA.GWS.GMAIL.1.1`.
 The ID leaves out the policy's version, so a row keeps its ID when CISA updates the policy. Each row has the
 policy's requirement as its title, the baseline's rationale, the steps to configure it, its NIST SP 800-53 and
-MITRE ATT&CK mappings, and what ScubaGoggles found. Rows are tagged `ScubaGoggles` and `GWS.<product>`
-(`GWS.GMAIL`, `GWS.DRIVEDOCS` and so on), and policies that BOD 25-01 requires are tagged `BOD-25-01`.
+MITRE ATT&CK mappings, and what ScubaGoggles found. Rows are tagged `SCuBA` and `SCuBA.<baseline>`
+(`SCuBA.GMAIL`, `SCuBA.DRIVEDOCS` and so on, as in the ScubaGear pack), and policies that BOD 25-01 requires are
+tagged `BOD-25-01`. Each row carries the MITRE ATT&CK techniques CISA maps the policy to.
 
 The pack does not sign in to Google or run ScubaGoggles: you run ScubaGoggles, and the pack reads the results file
-it wrote. It needs Maester 3.0 or later.
+it wrote. It needs Maester 3.0.0-rc59 or later.
 
 ## Run it
 
@@ -47,8 +48,8 @@ Install-MtPack maester365/maester-pack-scubagoggles
 ```
 
 ```powershell
-Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn -SkipGraphConnect    # only the ScubaGoggles results
-Invoke-Maester                                                   # Maester's tests and the ScubaGoggles results
+Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn    # only the ScubaGoggles results
+Invoke-Maester                                 # Maester's tests and the ScubaGoggles results
 ```
 
 `Install-MtPack` shows what the pack can reach (no services, no network, no modules: it only reads a file) and
@@ -61,9 +62,8 @@ that one run wrote it in, or the output folder, where the pack reads the newest 
 than `ScubaGoggles.MaxReportAgeDays` (7 by default; 0 turns the check off), and a results file that another SCuBA
 tool, such as ScubaGear, wrote.
 
-Maester does not connect to Google for this pack. `Connect-Maester` is only needed for the other tests you run with
-it: when you run the pack on its own, add `-SkipGraphConnect`, or `Invoke-Maester` stops because it is not
-connected to Microsoft Graph.
+Maester does not connect to Google for this pack, and a run of only this pack needs no `Connect-Maester`.
+`Connect-Maester` is needed for the other tests you run with it.
 
 ## Run it in a pipeline
 
@@ -83,7 +83,7 @@ Run ScubaGoggles with a service account as its own step, then Maester in the sam
   run: |
     Install-Module Maester -Scope CurrentUser -Force
     Restore-MtPack
-    Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn -SkipGraphConnect -NonInteractive -OutputFolder ./test-results
+    Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn -NonInteractive -OutputFolder ./test-results
 ```
 
 Install the pack once on your own computer and commit `maester-packs.lock.json` and `maester-config.json`:
@@ -133,17 +133,19 @@ pack to a new version of ScubaGoggles, clone that release and run the generator:
 
 ```powershell
 git clone --depth 1 --branch v1.1.0 https://github.com/cisagov/ScubaGoggles ~/src/ScubaGoggles
-. ./tools/Update-ScubaGwsCatalog.ps1
+. ./build/Update-ScubaGwsCatalog.ps1
 Update-ScubaGwsCatalog -SourcePath ~/src/ScubaGoggles
 ```
 
 The generator reads the baseline Markdown (`scubagoggles/baselines/*.md`), so a change to how CISA writes those
-files can drop a field. The pack check ([check-pack.yml](.github/workflows/check-pack.yml)) fails when a policy has
-no title, criticality, rationale or remediation. It also runs the pack on `tools/fixtures`, a cut of ScubaGoggles'
-sample report with each result ScubaGoggles writes, and fails when one maps to the wrong Maester result. When
+files can drop a field. The pack's tests ([spec/ScubaGogglesPack.Tests.ps1](spec/ScubaGogglesPack.Tests.ps1)), which
+the pack check ([check-pack.yml](.github/workflows/check-pack.yml)) runs on Ubuntu and Windows, fail when a policy
+has no title, criticality, rationale or remediation. They also run the pack on `spec/fixtures`, a cut of
+ScubaGoggles' sample report with each result ScubaGoggles writes, and fail when one maps to the wrong Maester
+result. Run them with `Invoke-Pester ./spec`. When
 ScubaGoggles changes the results it writes (a new `Result` value, say; CISA documents the file in
 [tooloutputschema.md](https://github.com/cisagov/ScubaGoggles/blob/main/docs/misc/tooloutputschema.md)), update
-`Test-ScubaGws` in [tests/Test.MP.SCUBA.GWS.ps1](tests/Test.MP.SCUBA.GWS.ps1), the fixture and the check.
+`Test-ScubaGws` in [tests/Test.MP.SCUBA.GWS.ps1](tests/Test.MP.SCUBA.GWS.ps1), the fixture and the tests.
 
 Releases work as in the [demo pack](https://github.com/maester365/maester-pack-demo#versions-and-releases): with
 the repository variable `PACK_RELEASES` set to `true`, every merged pull request gets the next version and a
@@ -155,14 +157,15 @@ release, with its notes from [CHANGELOG.md](CHANGELOG.md). Without it, `Install-
 | --- | --- |
 | `maester-pack.json` | The manifest: ID, code, version, the suite, helpers and catalog |
 | `maester-pack.guide.json` | How to install and run the pack, for its page on the pack index |
-| `catalog.json` | The baselines' policies, generated by `tools/Update-ScubaGwsCatalog.ps1` |
+| `catalog.json` | The baselines' policies, generated by `build/Update-ScubaGwsCatalog.ps1` |
 | `tests/` | The suite: the `MP.SCUBA.GWS` family test, with its instance source, and its Markdown |
 | `helpers/` | Finding and reading the results file, the catalog, and turning ScubaGoggles' HTML into Markdown |
-| `tools/` | The catalog generator and the fixture the pack check runs on. The pack never loads it |
+| `build/` | The catalog generator |
+| `spec/` | The pack's Pester tests and the fixture they read |
 
 ## Licence
 
 This pack is published under the [MIT licence](LICENSE). ScubaGoggles and the SCuBA baselines are published by CISA
 under [CC0 1.0](https://github.com/cisagov/ScubaGoggles/blob/main/LICENSE); the pack does not include ScubaGoggles'
-code. `catalog.json` is generated from the baselines, and `tools/fixtures` is cut from ScubaGoggles' sample report.
+code. `catalog.json` is generated from the baselines, and `spec/fixtures` is cut from ScubaGoggles' sample report.
 CISA does not endorse this pack.
