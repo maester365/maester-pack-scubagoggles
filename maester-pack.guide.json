@@ -17,7 +17,7 @@
   },
   "Run": {
     "Commands": [
-      { "Text": "Only the ScubaGoggles results", "Command": "Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn -SkipGraphConnect" },
+      { "Text": "Only the ScubaGoggles results", "Command": "Invoke-Maester -Pack SCUBA.GWS -SkipBuiltIn" },
       { "Text": "Maester's tests and the ScubaGoggles results", "Command": "Invoke-Maester -Pack SCUBA.GWS" }
     ],
     "Notes": [
